@@ -1,0 +1,64 @@
+
+version: '3.8'
+
+services:
+  mqtt:
+    image: eclipse-mosquitto
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
+
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: fleet_data
+    ports:
+      - "3309:3306"
+    volumes:
+        - ./mysql-init:/docker-entrypoint-initdb.d
+
+
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+
+  neo4j:
+    image: neo4j
+    environment:
+      - NEO4J_AUTH=neo4j/password
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+
+  php:
+    image: php:8.2-apache
+    ports:
+      - "8080:80"
+    volumes:
+      - ./php:/var/www/html
+
+  subscriber:
+    build: ./subscriber
+    depends_on:
+      - mqtt
+      - mysql
+      - mongodb
+      - neo4j
+
+  publisher:
+    build: ./publisher
+    depends_on:
+      - mqtt
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3309
+    depends_on:
+      - mysql
