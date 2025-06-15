@@ -20,7 +20,6 @@ $result =mysqli_query($conn,$sql);
     <h1>Fleet Tracking - Speed Logs</h1>
     <table>
         <tr>
-            <th>ID</th>
             <th>Car ID</th>
             <th>Speed (km/h)</th>
             <th>Status</th>
@@ -29,7 +28,6 @@ $result =mysqli_query($conn,$sql);
         <?php if ($result && $result->num_rows > 0): ?>
             <?php while($row = $result->fetch_assoc()): ?>
                 <tr>
-                    <td><?= htmlspecialchars($row['id']) ?></td>
                     <td><?= htmlspecialchars($row['car_id']) ?></td>
                     <td><?= htmlspecialchars($row['speed']) ?></td>
                     <td><?= htmlspecialchars($row['status']) ?></td>
@@ -40,7 +38,7 @@ $result =mysqli_query($conn,$sql);
             <tr><td colspan="5">No data available</td></tr>
         <?php endif; ?>
     </table>
-    
+
 </body>
 </html>
 

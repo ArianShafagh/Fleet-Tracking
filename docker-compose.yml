@@ -1,4 +1,3 @@
-
 version: '3.8'
 
 services:
@@ -17,8 +16,7 @@ services:
     ports:
       - "3309:3306"
     volumes:
-        - ./mysql-init:/docker-entrypoint-initdb.d
-
+      - ./mysql-init:/docker-entrypoint-initdb.d
 
   mongodb:
     image: mongo
@@ -44,19 +42,6 @@ services:
       - mysql
       - neo4j
 
-  # subscriber:
-  #   build: ./subscriber
-  #   depends_on:
-  #     - mqtt
-  #     - mysql
-  #     - mongodb
-  #     - neo4j
-
-  # publisher:
-  #   build: ./publisher
-  #   depends_on:
-  #     - mqtt
-
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     ports:
@@ -79,3 +64,41 @@ services:
     depends_on:
       - mongodb
 
+  publisher-sql:
+    build: ./publisher
+    command: python sqlP.py
+    depends_on:
+      - mqtt
+
+  subscriber-sql:
+    build: ./subscriber
+    command: python sqlS.py
+    depends_on:
+      - mqtt
+      - mysql
+
+  publisher-mongo:
+    build: ./publisher
+    command: python mongoP.py
+    depends_on:
+      - mqtt
+
+  subscriber-mongo:
+    build: ./subscriber
+    command: python mongoS.py
+    depends_on:
+      - mqtt
+      - mongodb
+
+  publisher-neo4j:
+    build: ./publisher
+    command: python neo4jP.py
+    depends_on:
+      - mqtt
+
+  subscriber-neo4j:
+    build: ./subscriber
+    command: python neo4jS.py
+    depends_on:
+      - mqtt
+      - neo4j
