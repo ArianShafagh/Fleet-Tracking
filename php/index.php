@@ -7,8 +7,9 @@
 </head>
 <body>
     <h1>Welcome to the Home Page</h1>
-    <a href="SQL.php">Open SQL Page</a>
-    <a href="MongoDB.php">Open MongoDB Page</a>
-    <a href="Neo4j.php">Open Neo4j Page</a>
+    <a href="SQL.php">Open SQL Page</a><br>
+    <a href="MongoDB.php">Open MongoDB Page</a><br>
+    <a href="Neo4j.php">Open Neo4j Page</a><br>
+    <a href="test.php">PHP Info</a><br>
 </body>
 </html>

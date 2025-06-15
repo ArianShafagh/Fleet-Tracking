@@ -34,24 +34,28 @@ services:
       - "7687:7687"
 
   php:
-    image: php:8.2-apache
+    build: ./php
     ports:
       - "8080:80"
     volumes:
       - ./php:/var/www/html
-
-  subscriber:
-    build: ./subscriber
     depends_on:
-      - mqtt
-      - mysql
       - mongodb
+      - mysql
       - neo4j
 
-  publisher:
-    build: ./publisher
-    depends_on:
-      - mqtt
+  # subscriber:
+  #   build: ./subscriber
+  #   depends_on:
+  #     - mqtt
+  #     - mysql
+  #     - mongodb
+  #     - neo4j
+
+  # publisher:
+  #   build: ./publisher
+  #   depends_on:
+  #     - mqtt
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -59,6 +63,19 @@ services:
       - "8081:80"
     environment:
       PMA_HOST: mysql
-      PMA_PORT: 3309
+      PMA_PORT: 3306
     depends_on:
       - mysql
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - "8082:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin
+    depends_on:
+      - mongodb
+
