@@ -4,23 +4,20 @@ import json
 import sys
 import time
 
-# Step 1: Connect to MongoDB
 try:
     mongo_client = MongoClient("mongodb://mongodb:27017/", serverSelectionTimeoutMS=3000)
-    mongo_client.server_info()  # Test connection
-    print("✅ Connected to MongoDB")
+    mongo_client.server_info() 
+    print("Connected to MongoDB")
 except Exception as e:
-    print("❌ MongoDB connection failed:", e)
+    print("MongoDB connection failed:", e)
     sys.exit(1)
 
-# Step 2: Use DB and Collection
 db_name = "fleet_data"
 collection_name = "car_locations"
 db = mongo_client[db_name]
 collection = db[collection_name]
-print(f"✅ Using database '{db_name}' and collection '{collection_name}'")
+print(f"Using database '{db_name}' and collection '{collection_name}'")
 
-# Step 3: Define MQTT Message Handler
 def on_message(client, userdata, msg):
     try:
         payload = json.loads(msg.payload.decode())
@@ -33,24 +30,23 @@ def on_message(client, userdata, msg):
             "latitude": latitude,
             "longitude": longitude
         }
-        print("📦 Received message:", document)
+        print("Received message:", document)
         collection.insert_one(document)
-        print("✅ Inserted into MongoDB")
+        print("Inserted into MongoDB")
     except Exception as e:
-        print("❌ Error processing message:", e)
+        print("Error processing message:", e)
 
-# Step 4: Connect to MQTT Broker with Retry
 client = mqtt.Client()
 while True:
     try:
         client.connect("mqtt", 1883)
-        print("✅ Connected to MQTT broker")
+        print("Connected to MQTT broker")
         break
     except Exception as e:
-        print("❌ MQTT connection failed, retrying in 3s:", e)
+        print("MQTT connection failed, retrying in 3s:", e)
         time.sleep(3)
 
 client.subscribe("fleet/location")
 client.on_message = on_message
-print("🟢 Subscriber is listening to 'fleet/location'...")
+print("Subscriber is listening to 'fleet/location'...")
 client.loop_forever()

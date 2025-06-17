@@ -11,10 +11,10 @@ while True:
             password="root",
             database="fleet_data"
         )
-        print("✅ Connected to MySQL")
+        print("Connected to MySQL")
         break
     except mysql.connector.Error as err:
-        print("❌ MySQL connection failed, retrying in 3s...", err)
+        print("MySQL connection failed, retrying in 3s...", err)
         time.sleep(3)
 
 cursor = db.cursor()
@@ -31,23 +31,23 @@ def on_message(client, userdata, msg):
         cursor.execute(query, values)
         db.commit()
 
-        print(f"✅ Inserted: {car_id}, {speed}, {status}")
+        print(f"Inserted: {car_id}, {speed}, {status}")
     except Exception as e:
-        print("❌ Error processing message:", e)
+        print("Error processing message:", e)
 
 client = mqtt.Client()
 
 while True:
     try:
         client.connect("mqtt", 1883)
-        print("✅ Connected to MQTT broker")
+        print("Connected to MQTT broker")
         break
     except Exception as e:
-        print("❌ MQTT connection failed, retrying in 3s...", e)
+        print("MQTT connection failed, retrying in 3s...", e)
         time.sleep(3)
 
 client.subscribe("fleet/speed")
 client.on_message = on_message
 
-print("🟢 Subscriber is listening to 'fleet/speed'...")
+print("Subscriber is listening to 'fleet/speed'...")
 client.loop_forever()

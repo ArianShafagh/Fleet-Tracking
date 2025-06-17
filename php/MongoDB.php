@@ -1,8 +1,6 @@
 <?php
-// Connect to MongoDB (default Docker host and port)
-$manager = new MongoDB\Driver\Manager("mongodb://mongodb:27017");
 
-// Query everything from fleet_data.car_locations collection
+$manager = new MongoDB\Driver\Manager("mongodb://mongodb:27017");
 $query = new MongoDB\Driver\Query([]);
 $cursor = $manager->executeQuery("fleet_data.car_locations", $query);
 ?>

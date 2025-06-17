@@ -3,7 +3,7 @@ import random
 import time
 import json
 
-broker_address = "mqtt"
+broker_address = "mqtt" # "localhost"
 port = 1883
 topic = "fleet/location"
 
